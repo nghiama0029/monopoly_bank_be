@@ -93,6 +93,8 @@ export class RoomController {
         'roomUsers.user',
         'roomProperties',
         'transactions',
+        'transactions.fromUser',
+        'transactions.toUser',
       ],
     });
 

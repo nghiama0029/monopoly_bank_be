@@ -17,9 +17,9 @@ import { GameGateway } from './gateway';
       type: 'mysql',
       host: process.env.DATABASE_HOST || 'localhost',
       port: parseInt(process.env.DATABASE_PORT ?? '3306', 10),
-      username: process.env.DATABASE_USER || 'root',
-      password: process.env.DATABASE_PASSWORD || '123456',
-      database: process.env.DATABASE_NAME || 'monopoly_banking_db',
+      username: process.env.DATABASE_USER || 'appuser',
+      password: process.env.DATABASE_PASSWORD || 'apppass',
+      database: process.env.DATABASE_NAME || 'appdb',
       entities: [User, Room, RoomUser, Property, RoomProperty, Transaction],
       synchronize: true, // ❗ Dùng true khi dev, false khi production
     }),

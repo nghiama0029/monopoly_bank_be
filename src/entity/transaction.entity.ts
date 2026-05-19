@@ -4,6 +4,7 @@ import {
   ManyToOne,
   Column,
   CreateDateColumn,
+  RelationId,
 } from 'typeorm';
 import { Room } from './room.entity';
 import { User } from './user.entity';
@@ -28,8 +29,14 @@ export class Transaction {
   @ManyToOne(() => User, (user) => user.transactionsFrom, { nullable: true })
   fromUser: User;
 
+  @RelationId((t: Transaction) => t.fromUser)
+  fromUserId: number | null;
+
   @ManyToOne(() => User, (user) => user.transactionsTo, { nullable: true })
   toUser: User;
+
+  @RelationId((t: Transaction) => t.toUser)
+  toUserId: number | null;
 
   @Column()
   amount: number;

@@ -103,6 +103,17 @@ export class GameController {
     });
     await this.txRepo.save(tx);
 
+    let fromUserName = '';
+    let toUserName = '';
+
+    if (body.type === 'pass_start') {
+      fromUserName = 'Bank';
+      toUserName = tx.fromUser?.nickname;
+    } else {
+      fromUserName = tx.fromUser?.nickname || 'Bank';
+      toUserName = tx.toUser?.nickname || 'Bank';
+    }
+
     this.ws.emitTransaction({
       roomId: +roomId,
       id: tx.id,
@@ -110,6 +121,8 @@ export class GameController {
       amount: tx.amount,
       fromUserId: tx.fromUser?.id,
       toUserId: tx.toUser?.id,
+      fromUserName,
+      toUserName,
       createdAt: tx.createdAt.toISOString(),
     });
 

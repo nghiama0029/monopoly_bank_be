@@ -25,6 +25,8 @@ type TxPayload = {
   amount: number;
   fromUserId?: number;
   toUserId?: number;
+  fromUserName?: string;
+  toUserName?: string;
   createdAt: string;
 };
 
