@@ -83,6 +83,10 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   emitNextTurn(payload: NextTurnPayload) {
     this.io.to(`room:${payload.roomId}`).emit('game:next_turn', payload);
   }
+  emitPlayerSurrendered(roomId: number, userId: number) {
+    this.io.to(`room:${roomId}`).emit('game:player_surrendered', { userId });
+  }
+
   emitBalanceUpdated(payload: BalanceUpdatedPayload) {
     this.io.to(`room:${payload.roomId}`).emit('user:balance_updated', payload);
   }

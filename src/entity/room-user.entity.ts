@@ -31,6 +31,9 @@ export class RoomUser {
   })
   color: TColor;
 
+  @Column({ default: false })
+  hasSurrendered: boolean;
+
   @CreateDateColumn()
   joinedAt: Date;
 }

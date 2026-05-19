@@ -15,7 +15,7 @@ export class RoomProperty {
   property: Property;
 
   @ManyToOne(() => User, (user) => user.properties, { nullable: true })
-  owner: User;
+  owner: User | null;
 
   @Column({ default: false })
   mortgaged: boolean;
