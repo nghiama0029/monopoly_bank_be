@@ -10,17 +10,16 @@ import {
 } from './entity';
 import { AuthController, GameController, RoomController } from './controller';
 import { GameGateway } from './gateway';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: process.env.DATABASE_HOST || 'localhost',
-      port: parseInt(process.env.DATABASE_PORT ?? '3306', 10),
-      username: process.env.DATABASE_USER || 'appuser',
-      password: process.env.DATABASE_PASSWORD || 'apppass',
-      database: process.env.DATABASE_NAME || 'appdb',
+      url: process.env.DATABASE_URL || 'mysql://appuser:apppass@localhost:3306/appdb',
       entities: [User, Room, RoomUser, Property, RoomProperty, Transaction],
+      autoLoadEntities: true,
       synchronize: true, // ❗ Dùng true khi dev, false khi production
     }),
     TypeOrmModule.forFeature([
