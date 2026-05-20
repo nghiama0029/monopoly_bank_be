@@ -58,6 +58,15 @@ export class RoomController {
     return this.roomService.endGame(roomId);
   }
 
+  @Patch(':roomId/users/:userId/color')
+  async changeUserColor(
+    @Param('roomId') roomId: string,
+    @Param('userId') targetUserId: string,
+    @Body() body: { requesterUserId: number; color: any },
+  ) {
+    return this.roomService.changeUserColor(+roomId, +targetUserId, body);
+  }
+
   // user thoát phòng
   @Post(':roomId/leave')
   async leaveRoom(

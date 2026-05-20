@@ -277,6 +277,65 @@ export class RoomService {
     return this.roomRepo.save(room);
   }
 
+  async changeUserColor(
+    roomId: number,
+    targetUserId: number,
+    body: { requesterUserId: number; color: TColor },
+  ) {
+    const room = await this.roomRepo.findOne({
+      where: { id: roomId },
+      relations: ['createdBy', 'roomUsers', 'roomUsers.user'],
+    });
+
+    if (!room) {
+      throw new NotFoundException('Room không tồn tại');
+    }
+
+    const { requesterUserId, color } = body;
+
+    const validColors: TColor[] = ['red', 'blue', 'green', 'yellow'];
+    if (!validColors.includes(color)) {
+      throw new BadRequestException('Màu sắc không hợp lệ');
+    }
+
+    const isHost = room.createdBy.id === requesterUserId;
+
+    if (!isHost && requesterUserId !== targetUserId) {
+      throw new ForbiddenException(
+        'Bạn không có quyền thay đổi màu của người chơi này',
+      );
+    }
+
+    if (!isHost) {
+      // Người chơi thường: kiểm tra màu đã có ai dùng chưa
+      const takenColors = room.roomUsers
+        .filter((ru) => ru.user.id !== targetUserId)
+        .map((ru) => ru.color);
+      if (takenColors.includes(color)) {
+        throw new BadRequestException('Màu này đã có người sử dụng');
+      }
+    }
+
+    const targetRoomUser = room.roomUsers.find(
+      (ru) => ru.user.id === targetUserId,
+    );
+    if (!targetRoomUser) {
+      throw new NotFoundException('Người chơi không tồn tại trong phòng');
+    }
+
+    targetRoomUser.color = color;
+    await this.roomUserRepo.save(targetRoomUser);
+
+    this.ws.emitUserColorChanged(roomId, targetUserId, color);
+
+    return {
+      message: 'Thay đổi màu sắc thành công',
+      roomId,
+      userId: targetUserId,
+      newColor: color,
+    };
+  }
+
   async leaveRoom(roomId: number, userId: number) {
     // Tìm room kèm createdBy
     const room = await this.roomRepo.findOne({

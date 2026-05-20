@@ -38,3 +38,14 @@ from.balance =
 ## Lý Do
 * **TypeORM Lazy-Loading**: Mặc định TypeORM không tự động load các quan hệ để tiết kiệm tài nguyên mạng và CPU, do đó nhà phát triển phải chỉ định chính xác các quan hệ lồng nhau khi cần sử dụng dữ liệu của chúng.
 * **Đặc thù nghiệp vụ Monopoly**: Thiết kế API của ứng dụng sử dụng `fromUserId` đại diện cho đối tượng thực hiện thao tác qua điểm xuất phát, dẫn đến cần một nhánh rẽ logic riêng biệt so với việc chuyển tiền thông thường.
+
+### 3. Cấu hình biến môi trường DatabaseURL qua Docker Compose
+**Triệu chứng**: Chạy `docker compose up backend` bị lỗi `ECONNREFUSED ::1:3306`.
+**Root cause**: File `.env` chứa URL trỏ tới `localhost` bị copy vào image lúc build. TypeORM ưu tiên đọc `process.env.DATABASE_URL` thay vì các biến `DATABASE_HOST` cấu hình rời rạc trong `docker-compose.yml`.
+**Cách xử lý**: Khai báo trực tiếp `DATABASE_URL` trong `docker-compose.yml` để ghi đè cấu hình file `.env`.
+
+```yaml
+# ✅ ĐÚNG
+environment:
+  DATABASE_URL: mysql://appuser:apppass@mysql:3306/appdb
+```

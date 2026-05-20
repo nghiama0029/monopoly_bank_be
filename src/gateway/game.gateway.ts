@@ -93,4 +93,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   emitTransaction(payload: TxPayload) {
     this.io.to(`room:${payload.roomId}`).emit('tx:created', payload);
   }
+  emitUserColorChanged(roomId: number, userId: number, color: string) {
+    this.io.to(`room:${roomId}`).emit('user:color_updated', { userId, color });
+  }
 }

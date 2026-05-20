@@ -53,3 +53,17 @@ color: TColor;
 ## Lý Do
 * **Dễ bảo trì**: Barrel imports kết hợp với Path Alias giúp việc di chuyển vị trí file hay cấu trúc lại thư mục không làm gãy các câu lệnh import ở nơi khác.
 * **Type-safety**: Ràng buộc chặt chẽ kiểu dữ liệu ở mức TypeScript giúp IDE bắt lỗi sớm trước khi code chạy đến tầng Database.
+
+### 5. Ép kiểu dữ liệu (Type Casting) cho Controller Params
+Các tham số lấy từ URL qua decorator `@Param` mặc định là kiểu chuỗi (string) tại runtime, ngay cả khi được khai báo type là `number` trong Typescript. Điều này dễ gây bug khi so sánh nghiêm ngặt `!==`.
+
+```typescript
+// ✅ ĐÚNG: Sử dụng dấu '+' để ép kiểu tham số sang number khi truyền xuống Service
+@Patch(':roomId/users/:userId/color')
+async changeUserColor(
+  @Param('roomId') roomId: string,
+  @Param('userId') targetUserId: string,
+) {
+  return this.roomService.changeUserColor(+roomId, +targetUserId);
+}
+```
