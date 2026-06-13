@@ -10,6 +10,14 @@ import { AllExceptionsFilter, EntityNotFoundFilter } from './common/exception';
 import { TransformInterceptor } from './common/interceptors';
 
 async function bootstrap() {
+  console.log('--- DEBUG ENVIRONMENT ---');
+  console.log('DATABASE_URL is defined:', !!process.env.DATABASE_URL);
+  if (process.env.DATABASE_URL) {
+    const parts = process.env.DATABASE_URL.split('@');
+    console.log('DATABASE_URL Host:', parts[1] ? parts[1].substring(0, 30) + '...' : 'No Host (local/invalid format)');
+  }
+  console.log('-------------------------');
+
   const app = await NestFactory.create(AppModule, { cors: { origin: '*' } });
 
   app.useGlobalPipes(new ValidationPipe()); // dùng class-validator
