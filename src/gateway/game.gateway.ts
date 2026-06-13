@@ -32,7 +32,15 @@ type TxPayload = {
 
 @WebSocketGateway({
   namespace: '/ws',
-  cors: { origin: '*' },
+  cors: {
+    origin: [
+      'https://monopolybankingfe.vercel.app',
+      'http://localhost:3000',
+      'http://localhost:3001',
+      'http://localhost:5173',
+    ],
+    credentials: true,
+  },
 })
 export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() io: Server;

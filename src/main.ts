@@ -18,10 +18,19 @@ async function bootstrap() {
   }
   console.log('-------------------------');
 
-  const app = await NestFactory.create(AppModule, { cors: { origin: '*' } });
+  const app = await NestFactory.create(AppModule);
 
   app.useGlobalPipes(new ValidationPipe()); // dùng class-validator
-  app.enableCors(); // nếu gọi từ frontend
+  app.enableCors({
+    origin: [
+      'https://monopolybankingfe.vercel.app',
+      'http://localhost:3000',
+      'http://localhost:3001',
+      'http://localhost:5173',
+    ],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
+  });
 
   // Cấu hình Swagger
   const config = new DocumentBuilder()
