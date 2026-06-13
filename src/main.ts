@@ -23,7 +23,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe()); // dùng class-validator
   app.enableCors({
     origin: [
-      'https://monopolybankingfe.vercel.app',
+      'https://monopoly-bank-fe.vercel.app',
       'http://localhost:3000',
       'http://localhost:3001',
       'http://localhost:5173',
