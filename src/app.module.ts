@@ -8,7 +8,7 @@ import {
   Transaction,
   User,
 } from './entity';
-import { AuthController, GameController, RoomController } from './controller';
+import { AuthController, GameController, RoomController, AppController } from './controller';
 import { GameGateway } from './gateway';
 import { ConfigModule } from '@nestjs/config';
 import { AuthService, GameService, RoomService } from './service';
@@ -24,6 +24,13 @@ import { AuthService, GameService, RoomService } from './service';
       entities: [User, Room, RoomUser, Property, RoomProperty, Transaction],
       autoLoadEntities: true,
       synchronize: true, // ❗ Dùng true khi dev, false khi production
+      ssl:
+        process.env.DB_SSL === 'true' ||
+        (process.env.DATABASE_URL && process.env.DATABASE_URL.includes('tidb'))
+          ? {
+              rejectUnauthorized: false,
+            }
+          : undefined,
     }),
     TypeOrmModule.forFeature([
       User,
@@ -35,6 +42,6 @@ import { AuthService, GameService, RoomService } from './service';
     ]),
   ],
   providers: [GameGateway, AuthService, RoomService, GameService],
-  controllers: [AuthController, RoomController, GameController],
+  controllers: [AuthController, RoomController, GameController, AppController],
 })
 export class AppModule {}
